@@ -7,22 +7,11 @@ namespace SalesWebMvc.Models
 {
     public class Department
     {
-        public int Id { get; private set; }
-        public string Name { get; private set; }
+        public int Id { get;  set; }
+        public string Name { get;  set; }
 
-        public Department(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
 
-        public void addSeller(Seller seller)
-        {
 
-        }
-        public double totalSales(DateTime initial, DateTime final)
-        {
-            return 0;
-        }
+
     }
 }
