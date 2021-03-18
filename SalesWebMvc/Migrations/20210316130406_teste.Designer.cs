@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SalesWebMvc.Data;
+using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Migrations
 {
     [DbContext(typeof(SalesWebMvcContext))]
-    [Migration("20210315203742_teste")]
+    [Migration("20210316130406_teste")]
     partial class teste
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
