@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Services;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
+using SalesWebMvc.Services.Exceptions;
+using System.Collections.Generic;
 
 namespace SalesWebMvc.Controllers
 {
@@ -17,7 +16,7 @@ namespace SalesWebMvc.Controllers
         public SellersController(SellerService sellerService, DepartmentService departmentService)
         {
             _sellerService = sellerService;
-            _departmentService = departmentService; 
+            _departmentService = departmentService;
         }
         public IActionResult Index()
         {
@@ -32,20 +31,20 @@ namespace SalesWebMvc.Controllers
             return View(viewModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken] 
-        public IActionResult Create(Seller seller) //falta testar
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Seller seller)
         {
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Delete(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
             var obj = _sellerService.FindById(id.Value);
-            if(obj == null)
+            if (obj == null)
             {
                 return NotFound();
             }
@@ -71,6 +70,48 @@ namespace SalesWebMvc.Controllers
                 return NotFound();
             }
             return View(obj);
+        }
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var obj = _sellerService.FindById(id.Value);
+            List<Department> departmens = _departmentService.FindAll();
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new SellerFormViewModel { Departments = departmens, Seller = obj };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+
+            catch(DbConcurrencyException)
+            {
+                return BadRequest();
+            }
+            catch(NotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }
